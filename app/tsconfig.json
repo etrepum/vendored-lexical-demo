@@ -1,10 +1,10 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
+    "target": "ESNext",
     "useDefineForClassFields": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "lib": ["ESNext", "DOM", "DOM.Iterable", "ESNext.Disposable"],
     "module": "ESNext",
-    "skipLibCheck": false,
+    "skipLibCheck": true,
 
     /* Bundler mode */
     "moduleResolution": "bundler",
@@ -14,10 +14,16 @@
     "noEmit": true,
     "jsx": "react-jsx",
 
-    /* Linting */
+    /* Resolve `lexical` / `@lexical/*` to their TypeScript source via the
+       `source` export condition, matching app/vite.config.ts so tsc and the
+       bundler agree. Without it tsc falls through to dist/*.d.ts, which the
+       source-mode workflow never builds. */
+    "customConditions": ["source"],
+
+    /* strict, but without the unused-locals lints: the program now includes
+       lexical's own source, whose internal signatures intentionally keep
+       unused params. */
     "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
   "include": ["src"],
