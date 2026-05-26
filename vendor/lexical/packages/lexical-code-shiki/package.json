@@ -1,0 +1,65 @@
+{
+  "name": "@lexical/code-shiki",
+  "description": "This package contains the code highlighter for Lexical using shikijs engine",
+  "keywords": [
+    "lexical",
+    "editor",
+    "rich-text",
+    "code"
+  ],
+  "license": "MIT",
+  "version": "0.44.0",
+  "main": "./dist/LexicalCodeShiki.js",
+  "types": "./dist/index.d.ts",
+  "dependencies": {
+    "@lexical/code-core": "workspace:*",
+    "@lexical/extension": "workspace:*",
+    "@shikijs/core": "^4.0.2",
+    "@shikijs/engine-javascript": "^4.0.2",
+    "@shikijs/langs": "^4.0.2",
+    "@shikijs/themes": "^4.0.2",
+    "lexical": "workspace:*",
+    "shiki": "^4.0.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/facebook/lexical.git",
+    "directory": "packages/lexical-code-shiki"
+  },
+  "devDependencies": {
+    "@shikijs/types": "^4.0.2"
+  },
+  "module": "./dist/LexicalCodeShiki.mjs",
+  "sideEffects": true,
+  "exports": {
+    ".": {
+      "source": "./src/index.ts",
+      "import": {
+        "types": "./dist/index.d.ts",
+        "development": "./dist/LexicalCodeShiki.dev.mjs",
+        "production": "./dist/LexicalCodeShiki.prod.mjs",
+        "node": "./dist/LexicalCodeShiki.node.mjs",
+        "default": "./dist/LexicalCodeShiki.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.ts",
+        "development": "./dist/LexicalCodeShiki.dev.js",
+        "production": "./dist/LexicalCodeShiki.prod.js",
+        "default": "./dist/LexicalCodeShiki.js"
+      }
+    }
+  },
+  "files": [
+    "dist",
+    "src",
+    "!src/__tests__",
+    "!src/__bench__",
+    "!src/__mocks__",
+    "!src/**/*.test.ts",
+    "!src/**/*.test.tsx",
+    "!src/**/*.bench.ts",
+    "!src/**/*.bench.tsx",
+    "README.md",
+    "LICENSE"
+  ]
+}

@@ -1,0 +1,49 @@
+node_modules
+/.pnp
+.pnp.js
+
+base-build
+build
+coverage
+dist
+npm
+!scripts/npm
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.ts-temp
+.docusaurus
+.playwright-clipboard.lock
+e2e-screenshots
+test-results
+playwright-report
+/SOURCE_CODE_REVIEW.md
+
+npm-debug.log*
+
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/**/usage.statistics.xml
+.idea/**/dictionaries
+.idea/**/shelf
+
+.idea
+
+.claude
+# Lockfiles in standalone examples and integration test fixtures.
+# These directories are excluded from the pnpm workspace and have their own
+# dependency manifests. Tracking their lockfiles causes Dependabot to generate
+# alerts for transitive devDependencies that are never shipped to users.
+# The post-release workflow (update-examples.mjs) regenerates these lockfiles
+# locally as part of its build step — they don't need to be committed.
+examples/*/pnpm-lock.yaml
+scripts/__tests__/integration/fixtures/*/pnpm-lock.yaml

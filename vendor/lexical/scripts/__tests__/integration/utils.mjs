@@ -1,0 +1,261 @@
+/**
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ */
+// @ts-check
+import fs from 'fs-extra';
+import path from 'node:path';
+import {beforeAll, describe, expect, test} from 'vitest';
+
+import {exec} from '../../shared/childProcess.mjs';
+import {packagesManager} from '../../shared/packagesManager.mjs';
+import readMonorepoPackageJson from '../../shared/readMonorepoPackageJson.mjs';
+
+/** @typedef {import('../../shared/PackageMetadata.mjs').PackageMetadata} PackageMetadata */
+
+const monorepoVersion = readMonorepoPackageJson().version;
+
+const LONG_TIMEOUT = 240 * 1000;
+
+/**
+ * @function
+ * @template T
+ * @param {string} dir
+ * @param {() => Promise<T> | T} cb
+ * @returns {Promise<T>}
+ */
+async function withCwd(dir, cb) {
+  const cwd = process.cwd();
+  try {
+    process.chdir(dir);
+    return await cb();
+  } finally {
+    process.chdir(cwd);
+  }
+}
+
+/**
+ * @param {string} cmd
+ * @returns {Promise<{stdout: string; stderr: string}>}
+ */
+function expectSuccessfulExec(cmd) {
+  // Filter out VITEST_WORKER_ID to prevent Playwright from detecting Vitest environment
+  const env = Object.fromEntries(
+    Object.entries(process.env).filter(([k]) => k !== 'VITEST_WORKER_ID'),
+  );
+  return exec(cmd, {env}).catch(err => {
+    expect(
+      Object.fromEntries(
+        ['code', 'stdout', 'stderr'].map(prop => [prop, err[prop]]),
+      ),
+    ).toBe(null);
+    throw err;
+  });
+}
+
+/**
+ * @typedef {Object} ExampleContext
+ * @property {string} packageJsonPath
+ * @property {string} exampleDir
+ * @property {Record<string, any>} packageJson
+ */
+
+/**
+ * @param {ExampleContext} ctx
+ * @returns {Promise<Map<string, PackageMetadata>>} The installed monorepo dependency map
+ */
+async function buildExample({packageJson, exampleDir}) {
+  let hasPlaywright = false;
+  /** @type {Map<string, string>} */
+  const allDeps = new Map();
+  for (const depType of [
+    'dependencies',
+    'devDependencies',
+    'peerDependencies',
+    'lexicalUnreleasedDependencies',
+  ]) {
+    const deps = packageJson[depType] || {};
+    hasPlaywright ||= '@playwright/test' in deps;
+    for (const [dep, v] of Object.entries(deps)) {
+      allDeps.set(dep, `${dep}@${v}`);
+    }
+  }
+  const depsMap = packagesManager.computedMonorepoDependencyMap([
+    ...allDeps.keys(),
+  ]);
+  if (depsMap.size === 0) {
+    throw new Error(`No lexical dependencies detected: ${exampleDir}`);
+  }
+  const installDeps = Array.from(depsMap.entries(), ([dep, pkg]) =>
+    path.resolve('npm', `${pkg.getDirectoryName()}-${monorepoVersion}.tgz`),
+  );
+  ['node_modules', 'dist', 'build', '.next', '.svelte-kit'].forEach(cleanDir =>
+    fs.removeSync(path.resolve(exampleDir, cleanDir)),
+  );
+
+  await withCwd(exampleDir, async () => {
+    await expectSuccessfulExec(
+      `npm install --no-save ${installDeps.map(fn => `'${fn}'`).join(' ')}`,
+    );
+    await expectSuccessfulExec('npm run build');
+    if (hasPlaywright) {
+      await expectSuccessfulExec('npx playwright install');
+    }
+  });
+  return depsMap;
+}
+
+/**
+ * Build the example project with prerelease lexical artifacts
+ *
+ * @param {string} packageJsonPath
+ * @param {undefined | ((ctx: ExampleContext) => void)} [bodyFun=undefined]
+ */
+function describeExample(packageJsonPath, bodyFun = undefined) {
+  const packageJson = fs.readJsonSync(packageJsonPath);
+  const exampleDir = path.dirname(packageJsonPath);
+  /** @type {ExampleContext} */
+  const ctx = {exampleDir, packageJson, packageJsonPath};
+  describe(exampleDir, () => {
+    /** @type {PackageMetadata[]} */
+    const deps = [];
+    beforeAll(async () => {
+      deps.push(...(await buildExample(ctx)).values());
+    }, LONG_TIMEOUT);
+    test('install & build succeeded', () => {
+      expect(true).toBe(true);
+    });
+    test(`installed lexical ${monorepoVersion}`, () => {
+      const packageNames = deps.map(pkg => pkg.getNpmName());
+      expect(packageNames).toContain('lexical');
+      for (const pkg of deps) {
+        const installedPath = path.join(
+          exampleDir,
+          'node_modules',
+          pkg.getNpmName(),
+        );
+        expect({[installedPath]: fs.existsSync(installedPath)}).toEqual({
+          [installedPath]: true,
+        });
+        expect(
+          fs.readJsonSync(path.join(installedPath, 'package.json')),
+        ).toMatchObject({name: pkg.getNpmName(), version: monorepoVersion});
+      }
+    });
+    if (packageJson.scripts.test) {
+      test(
+        'tests pass',
+        async () => {
+          await withCwd(exampleDir, () => expectSuccessfulExec('npm run test'));
+        },
+        LONG_TIMEOUT,
+      );
+    }
+    if (bodyFun) {
+      bodyFun(ctx);
+    }
+  });
+}
+
+/**
+ * Describe a dev-example that uses workspace:* deps.
+ * These are built in-place using pnpm (workspace linking) rather than tarballs.
+ *
+ * @param {string} packageJsonPath
+ */
+function describeDevExample(packageJsonPath) {
+  const packageJson = fs.readJsonSync(packageJsonPath);
+  const exampleDir = path.dirname(packageJsonPath);
+  describe(exampleDir, () => {
+    beforeAll(async () => {
+      await withCwd(exampleDir, async () => {
+        await expectSuccessfulExec('pnpm install');
+        await expectSuccessfulExec('pnpm run build');
+      });
+    }, LONG_TIMEOUT);
+    test('build succeeded', () => {
+      expect(true).toBe(true);
+    });
+    if (packageJson.scripts && packageJson.scripts.test) {
+      test(
+        'tests pass',
+        async () => {
+          await withCwd(exampleDir, () =>
+            expectSuccessfulExec('pnpm run test'),
+          );
+        },
+        LONG_TIMEOUT,
+      );
+    }
+  });
+}
+
+/**
+ * Describe a fixture that consumes monorepo packages via pnpm's link:
+ * protocol. The fixture is intentionally outside the pnpm workspace, so
+ * `pnpm install --ignore-workspace` resolves link: deps as real symlinks
+ * into packages/ — the workflow real consumers use with `pnpm link`.
+ *
+ * @param {string} packageJsonPath
+ */
+function describeLinkedFixture(packageJsonPath) {
+  const packageJson = fs.readJsonSync(packageJsonPath);
+  const exampleDir = path.dirname(packageJsonPath);
+  describe(exampleDir, () => {
+    beforeAll(async () => {
+      // Wipe lockfile + node_modules so each run hits the linked package
+      // freshly (paranoia against stale pnpm content-addressable caches).
+      for (const cleanPath of ['node_modules', 'pnpm-lock.yaml', 'dist']) {
+        fs.removeSync(path.resolve(exampleDir, cleanPath));
+      }
+      await withCwd(exampleDir, async () => {
+        await expectSuccessfulExec('pnpm install --ignore-workspace');
+        await expectSuccessfulExec('pnpm run build');
+      });
+    }, LONG_TIMEOUT);
+    test('build succeeded', () => {
+      expect(true).toBe(true);
+    });
+    if (packageJson.scripts && packageJson.scripts.test) {
+      test(
+        'tests pass',
+        async () => {
+          await withCwd(exampleDir, () =>
+            expectSuccessfulExec('pnpm run test'),
+          );
+        },
+        LONG_TIMEOUT,
+      );
+    }
+  });
+}
+
+/**
+ * @param {Record<string, any>} packageJson
+ * @returns {boolean} true if any dependency uses pnpm's link: protocol
+ */
+function hasLinkProtocolDeps(packageJson) {
+  for (const depType of ['dependencies', 'devDependencies']) {
+    const deps = packageJson[depType] || {};
+    if (
+      Object.values(deps).some(
+        v => typeof v === 'string' && v.startsWith('link:'),
+      )
+    ) {
+      return true;
+    }
+  }
+  return false;
+}
+
+export {
+  describeDevExample,
+  describeExample,
+  describeLinkedFixture,
+  expectSuccessfulExec,
+  hasLinkProtocolDeps,
+  withCwd,
+};
