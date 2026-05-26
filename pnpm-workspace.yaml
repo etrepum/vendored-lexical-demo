@@ -1,0 +1,14 @@
+# The demo app plus the lexical packages, vendored under vendor/lexical via
+# git subtree. Globbing the vendored packages/* makes every `workspace:*`
+# reference between lexical packages resolve locally, so the app can build
+# straight from TypeScript source (see app/vite.config.ts `source` condition).
+#
+# The three heavy leaf apps below are vendored on disk but excluded from the
+# workspace: nothing else depends on them and they drag in docusaurus / wxt /
+# the full playground toolchain. Re-add a line to pull one back in.
+packages:
+  - 'app'
+  - 'vendor/lexical/packages/*'
+  - '!vendor/lexical/packages/lexical-website'
+  - '!vendor/lexical/packages/lexical-playground'
+  - '!vendor/lexical/packages/lexical-devtools'
