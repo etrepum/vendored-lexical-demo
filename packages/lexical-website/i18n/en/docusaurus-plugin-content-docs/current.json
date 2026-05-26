@@ -1,0 +1,42 @@
+{
+  "version.label": {
+    "message": "Next",
+    "description": "The label for version current"
+  },
+  "sidebar.api.category.Modules": {
+    "message": "Modules",
+    "description": "The label for category 'Modules' in sidebar 'api'"
+  },
+  "sidebar.api.category.@lexical/headless": {
+    "message": "@lexical/headless",
+    "description": "The label for category '@lexical/headless' in sidebar 'api'"
+  },
+  "sidebar.api.category.@lexical/react": {
+    "message": "@lexical/react",
+    "description": "The label for category '@lexical/react' in sidebar 'api'"
+  },
+  "sidebar.docs.category.Getting Started": {
+    "message": "Getting Started",
+    "description": "The label for category 'Getting Started' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Concepts": {
+    "message": "Concepts",
+    "description": "The label for category 'Concepts' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Extensions": {
+    "message": "Extensions",
+    "description": "The label for category 'Extensions' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Packages": {
+    "message": "Packages",
+    "description": "The label for category 'Packages' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.React": {
+    "message": "React",
+    "description": "The label for category 'React' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Collaboration": {
+    "message": "Collaboration",
+    "description": "The label for category 'Collaboration' in sidebar 'docs'"
+  }
+}

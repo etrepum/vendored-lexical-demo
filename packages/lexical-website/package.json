@@ -1,0 +1,76 @@
+{
+  "name": "@lexical/website",
+  "version": "0.44.0",
+  "private": true,
+  "scripts": {
+    "docusaurus": "cross-env IGNORE_PEER_DEPENDENCIES=react docusaurus",
+    "start": "pnpm -C ../.. run build && cross-env IGNORE_PEER_DEPENDENCIES=react TYPEDOC_WATCH=true docusaurus start",
+    "build": "pnpm run tsc && pnpm -C ../.. run build && cross-env IGNORE_PEER_DEPENDENCIES=react docusaurus build",
+    "tsc": "tsc -p tsconfig.json",
+    "swizzle": "cross-env IGNORE_PEER_DEPENDENCIES=react docusaurus swizzle",
+    "deploy": "cross-env IGNORE_PEER_DEPENDENCIES=react docusaurus deploy",
+    "clear": "cross-env IGNORE_PEER_DEPENDENCIES=react docusaurus clear",
+    "serve": "cross-env IGNORE_PEER_DEPENDENCIES=react docusaurus serve",
+    "write-translations": "cross-env IGNORE_PEER_DEPENDENCIES=react docusaurus write-translations",
+    "write-heading-ids": "cross-env IGNORE_PEER_DEPENDENCIES=react docusaurus write-heading-ids"
+  },
+  "dependencies": {
+    "@docusaurus/core": "^3.10.1",
+    "@docusaurus/faster": "^3.10.1",
+    "@docusaurus/plugin-client-redirects": "^3.10.1",
+    "@docusaurus/preset-classic": "^3.10.1",
+    "@docusaurus/theme-common": "^3.10.1",
+    "@docusaurus/theme-mermaid": "^3.10.1",
+    "@easyops-cn/docusaurus-search-local": "^0.55.1",
+    "@huggingface/transformers": "^4.0.1",
+    "@lexical/extension": "workspace:*",
+    "@lexical/hashtag": "workspace:*",
+    "@lexical/history": "workspace:*",
+    "@lexical/list": "workspace:*",
+    "@lexical/overflow": "workspace:*",
+    "@lexical/plain-text": "workspace:*",
+    "@lexical/react": "workspace:*",
+    "@lexical/rich-text": "workspace:*",
+    "@lexical/selection": "workspace:*",
+    "@lexical/utils": "workspace:*",
+    "@mdx-js/react": "^3.1.1",
+    "@mermaid-js/layout-elk": "^0.2.1",
+    "@radix-ui/react-tabs": "^1.1.13",
+    "clsx": "^2.1.1",
+    "docusaurus-plugin-typedoc": "^1.4.2",
+    "fs-extra": "^11.3.4",
+    "lexical": "workspace:*",
+    "mermaid": "^11.15.0",
+    "prism-react-renderer": "^2.4.1",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
+    "typedoc-plugin-markdown": "^4.11.0",
+    "typedoc-plugin-no-inherit": "^1.6.1",
+    "typedoc-plugin-rename-defaults": "^0.7.3",
+    "unist-util-visit": "^5.1.0"
+  },
+  "devDependencies": {
+    "@docusaurus/module-type-aliases": "^3.10.1",
+    "@docusaurus/theme-classic": "^3.10.1",
+    "@tailwindcss/postcss": "^4.2.4",
+    "buffer": "^6.0.3",
+    "cross-env": "^10.1.0",
+    "prettier-plugin-tailwindcss": "^0.8.0",
+    "tailwindcss": "^4.2.4",
+    "typedoc": "^0.28.19",
+    "typescript": "^6.0.3",
+    "webpack": "^5.106.2"
+  },
+  "browserslist": {
+    "production": [
+      ">0.5%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

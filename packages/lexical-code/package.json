@@ -1,0 +1,58 @@
+{
+  "name": "@lexical/code",
+  "description": "This package contains the functionality for the code blocks and code highlighting for Lexical.",
+  "keywords": [
+    "lexical",
+    "editor",
+    "rich-text",
+    "code"
+  ],
+  "license": "MIT",
+  "version": "0.44.0",
+  "main": "./dist/LexicalCode.js",
+  "types": "./dist/index.d.ts",
+  "dependencies": {
+    "@lexical/code-core": "workspace:*",
+    "@lexical/code-prism": "workspace:*",
+    "@lexical/extension": "workspace:*",
+    "lexical": "workspace:*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/facebook/lexical.git",
+    "directory": "packages/lexical-code"
+  },
+  "module": "./dist/LexicalCode.mjs",
+  "sideEffects": true,
+  "exports": {
+    ".": {
+      "source": "./src/index.ts",
+      "import": {
+        "types": "./dist/index.d.ts",
+        "development": "./dist/LexicalCode.dev.mjs",
+        "production": "./dist/LexicalCode.prod.mjs",
+        "node": "./dist/LexicalCode.node.mjs",
+        "default": "./dist/LexicalCode.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.ts",
+        "development": "./dist/LexicalCode.dev.js",
+        "production": "./dist/LexicalCode.prod.js",
+        "default": "./dist/LexicalCode.js"
+      }
+    }
+  },
+  "files": [
+    "dist",
+    "src",
+    "!src/__tests__",
+    "!src/__bench__",
+    "!src/__mocks__",
+    "!src/**/*.test.ts",
+    "!src/**/*.test.tsx",
+    "!src/**/*.bench.ts",
+    "!src/**/*.bench.tsx",
+    "README.md",
+    "LICENSE"
+  ]
+}

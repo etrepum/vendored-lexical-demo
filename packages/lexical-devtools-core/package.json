@@ -1,0 +1,64 @@
+{
+  "name": "@lexical/devtools-core",
+  "description": "This package contains tools necessary to debug and develop Lexical.",
+  "keywords": [
+    "lexical",
+    "editor",
+    "rich-text",
+    "utils"
+  ],
+  "license": "MIT",
+  "version": "0.44.0",
+  "main": "./dist/LexicalDevtoolsCore.js",
+  "types": "./dist/index.d.ts",
+  "dependencies": {
+    "@lexical/html": "workspace:*",
+    "@lexical/link": "workspace:*",
+    "@lexical/mark": "workspace:*",
+    "@lexical/table": "workspace:*",
+    "@lexical/utils": "workspace:*",
+    "lexical": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": ">=17.x",
+    "react-dom": ">=17.x"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/facebook/lexical.git",
+    "directory": "packages/lexical-devtools-core"
+  },
+  "module": "./dist/LexicalDevtoolsCore.mjs",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "source": "./src/index.ts",
+      "import": {
+        "types": "./dist/index.d.ts",
+        "development": "./dist/LexicalDevtoolsCore.dev.mjs",
+        "production": "./dist/LexicalDevtoolsCore.prod.mjs",
+        "node": "./dist/LexicalDevtoolsCore.node.mjs",
+        "default": "./dist/LexicalDevtoolsCore.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.ts",
+        "development": "./dist/LexicalDevtoolsCore.dev.js",
+        "production": "./dist/LexicalDevtoolsCore.prod.js",
+        "default": "./dist/LexicalDevtoolsCore.js"
+      }
+    }
+  },
+  "files": [
+    "dist",
+    "src",
+    "!src/__tests__",
+    "!src/__bench__",
+    "!src/__mocks__",
+    "!src/**/*.test.ts",
+    "!src/**/*.test.tsx",
+    "!src/**/*.bench.ts",
+    "!src/**/*.bench.tsx",
+    "README.md",
+    "LICENSE"
+  ]
+}

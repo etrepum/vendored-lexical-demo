@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "target": "ES2019",
+    "lib": ["esnext", "dom", "dom.iterable", "ESNext.Disposable"],
+    "module": "esnext",
+    "jsx": "react-jsx",
+    "moduleResolution": "bundler",
+    "noEmit": true,
+    "strict": true,
+    "typeRoots": ["node_modules/@types"],
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "allowJs": true,
+    "customConditions": ["source"]
+  },
+  "include": ["./libdefs", "./packages"],
+  "exclude": [
+    "./libdefs/*.js",
+    "**/build/**",
+    "**/dist/**",
+    "**/npm/**",
+    "**/node_modules/**",
+    "./packages/*/*.js",
+    "./packages/lexical-devtools/**",
+    "./packages/lexical-website/**",
+    "**/__tests__/**",
+    "**/__bench__/**"
+  ],
+  "typedocOptions": {"logLevel": "Verbose"}
+}
