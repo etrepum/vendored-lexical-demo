@@ -15,17 +15,16 @@
     "jsx": "react-jsx",
 
     /* Resolve `lexical` / `@lexical/*` to their TypeScript source via the
-       `source` export condition, matching app/vite.config.ts so tsc and the
-       bundler agree. Without it tsc falls through to dist/*.d.ts, which the
-       source-mode workflow never builds. */
+       `source` export condition, exactly like app/vite.config.ts. Without this,
+       tsc AND the editor's language server fall through to dist/*.d.ts (never
+       built in source mode) and report "Cannot find module 'lexical'". Needs
+       TypeScript >= 5.0 — see .vscode/settings.json for the editor. */
     "customConditions": ["source"],
 
-    /* strict, but without the unused-locals lints: the program now includes
-       lexical's own source, whose internal signatures intentionally keep
-       unused params. */
+    /* strict, minus the unused-locals lints: the program now includes lexical's
+       own source, whose internal signatures intentionally keep unused params. */
     "strict": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"],
-  "references": [{"path": "./tsconfig.node.json"}]
+  "include": ["src"]
 }

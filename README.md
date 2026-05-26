@@ -53,6 +53,17 @@ pnpm lexical:pull   # git subtree pull --squash from the lexical branch
 See [`AGENTS.md`](AGENTS.md) for the full subtree workflow (remote setup,
 pull/push) and workspace details.
 
+## Type-checking & editors
+
+`pnpm tsc` type-checks the demo. Like Vite, `tsc` (and your editor) resolves
+`lexical` / `@lexical/*` to the vendored TypeScript source via
+`customConditions: ["source"]` in [`app/tsconfig.json`](app/tsconfig.json) — no
+`paths`/alias to `vendor/` is needed. This requires **TypeScript >= 5.0**;
+[`.vscode/settings.json`](.vscode/settings.json) points VS Code at the workspace
+TypeScript so its language server honors the condition. If an editor shows
+"Cannot find module 'lexical'", restart the TS server and use the workspace
+TypeScript version.
+
 ## Credits
 
 The demo UI is adapted from lexical's own `examples/react-rich`. Lexical is

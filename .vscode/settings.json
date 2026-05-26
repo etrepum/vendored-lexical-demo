@@ -1,0 +1,5 @@
+{
+  "//": "Use the workspace TypeScript (5.9.x). It supports customConditions, which is what makes editors resolve lexical/@lexical/* to vendored src via the `source` export condition.",
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true
+}

@@ -11,7 +11,7 @@
     "dev": "pnpm --filter lexical-source-demo dev",
     "build": "pnpm --filter lexical-source-demo build",
     "preview": "pnpm --filter lexical-source-demo preview",
-    "typecheck": "pnpm --filter lexical-source-demo typecheck",
+    "tsc": "pnpm --filter lexical-source-demo run tsc",
     "lexical:pull": "git subtree pull --prefix vendor/lexical lexical-upstream claude/kind-johnson-RexEG --squash"
   }
 }

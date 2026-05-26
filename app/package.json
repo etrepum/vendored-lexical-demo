@@ -5,9 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "pnpm run tsc && vite build",
     "preview": "vite preview",
-    "typecheck": "tsc --noEmit"
+    "tsc": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.node.json --noEmit"
   },
   "dependencies": {
     "@lexical/react": "workspace:*",

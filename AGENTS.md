@@ -76,5 +76,15 @@ pnpm install        # install workspace deps
 pnpm dev            # run the demo (Vite dev server, source mode)
 pnpm build          # production build, straight from lexical source
 pnpm preview        # serve the production build
-pnpm typecheck      # tsc --noEmit over the demo (resolves lexical source types)
+pnpm tsc            # type-check the demo against the resolved lexical source
 ```
+
+## Editor / type-checking notes
+
+`tsc` and editors resolve `lexical` / `@lexical/*` to the vendored `src/` via
+`customConditions: ["source"]` in `app/tsconfig.json` (the same `source`
+condition Vite uses) — there is deliberately **no** `paths`/alias to `vendor/`.
+This needs TypeScript >= 5.0; `.vscode/settings.json` points the editor at the
+workspace TypeScript so VS Code's language server honors the condition. If a
+freshly-opened editor reports "Cannot find module 'lexical'", reload/restart the
+TS server (and accept the "use workspace TypeScript version" prompt).
